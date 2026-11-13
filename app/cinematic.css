@@ -1,0 +1,500 @@
+/* KIROKU V3 / CINEMATIC DESIGN SYSTEM
+   This layer intentionally overrides V2 presentation without changing catalog routes
+   or the existing browser watchlist format. All motion respects reduced-motion. */
+
+:root {
+  --bg: #080910;
+  --bg2: #0e101a;
+  --panel: #151621;
+  --panel2: #1e1c2b;
+  --line: rgba(248,236,238,.14);
+  --text: #fff9f4;
+  --subtle: #d0c8d1;
+  --muted: #a49daa;
+  --pink: #fa938c;
+  --pink-soft: #ffc0ad;
+  --violet: #b5a0fc;
+  --ice: #bce4d9;
+  --display: 'Syne', 'Outfit', system-ui, sans-serif;
+  --body: 'DM Sans', system-ui, sans-serif;
+  --number: 'Bebas Neue', Impact, sans-serif;
+}
+html {scroll-padding-top:100px}
+body {background: radial-gradient(ellipse at 82% 23%,rgba(99,45,91,.11),transparent 30%),linear-gradient(180deg,#090a12,#090a11 65%,#090a10);font-size:16px}
+body::before {opacity:.045;z-index:95}
+::selection{background:#f89791;color:#181018}
+.site-container,.shell {width:min(calc(100% - 116px),1540px)}
+.overline,.section-kicker {color:var(--pink-soft);font-size:12px;letter-spacing:2.05px;font-weight:800}
+.overline svg,.section-kicker svg {flex-shrink:0}
+.pink-dot{color:var(--pink)}
+:focus-visible{outline-color:#fbb4a7}
+
+/* An atmospheric, decorative particle layer: visual only, never interactive. */
+.ambient-particles {position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden;opacity:.54}
+.ambient-particle {position:absolute;left:var(--x);top:var(--y);width:var(--size);height:var(--size);border-radius:50%;background:var(--shade);box-shadow:0 0 9px 2px color-mix(in srgb,var(--shade),transparent 55%);animation:kiroku-drift var(--duration) ease-in-out var(--delay) infinite alternate;will-change:transform,opacity}
+@keyframes kiroku-drift {0%{transform:translate3d(0,0,0);opacity:.09}35%{opacity:.58}100%{transform:translate3d(18px,-65px,0);opacity:.1}}
+
+/* First-session opening sequence, with skip and a cinematic curtain exit. */
+.cinematic-intro {animation:intro-fallback 4.5s steps(1,end) forwards;position:fixed;z-index:1000;inset:0;overflow:hidden;background:#080910;color:#faf4f0;display:flex;align-items:center;justify-content:center;isolation:isolate}
+.intro-noise,.intro-glow{position:absolute;inset:0;pointer-events:none}
+.intro-noise{opacity:.1;background-image:repeating-linear-gradient(0deg,transparent 0px,transparent 3px,#ffffff06 4px);background-size:100% 5px;mix-blend-mode:screen}
+.intro-glow{background:radial-gradient(ellipse at 48% 44%,#8a435d6b,transparent 38%),radial-gradient(ellipse at 55% 62%,#3b286677,transparent 40%);animation:intro-breathe 3s ease-in-out both}
+.intro-topline,.intro-bottomline{position:absolute;left:clamp(22px,5vw,80px);right:clamp(22px,5vw,80px);z-index:4;display:flex;align-items:center;justify-content:space-between;gap:30px;font-size:11px;font-weight:800;letter-spacing:2.2px;color:#d4c7cd}
+.intro-topline{top:42px}.intro-bottomline{bottom:43px}
+.intro-topline::before{content:"";width:7px;height:7px;border:1px solid var(--pink);border-radius:50%;position:absolute;left:-18px;top:3px}
+.intro-core{text-align:center;z-index:3;transform:translateY(-8px);width:100%;padding:0 16px}
+.intro-eyebrow{font-size:12px;letter-spacing:clamp(3px,.6vw,8px);font-weight:800;color:#e2bec5;animation:intro-word-in .85s .15s both}
+.intro-wordmark{font:800 clamp(76px,15vw,265px)/1 var(--display);letter-spacing:-.085em;white-space:nowrap;max-width:100%;margin:.08em auto .06em;animation:intro-word-in 1.2s .2s cubic-bezier(.22,1,.35,1) both;text-shadow:0 0 70px #d06e7050}
+.intro-core p{font-size:clamp(11px,1.2vw,17px);letter-spacing:clamp(1.5px,.35vw,5px);font-weight:800;color:#d6c9d2;animation:intro-word-in .95s .65s both}
+.intro-progress{height:2px;width:min(300px,28vw);min-width:95px;background:#ffffff21;overflow:hidden}.intro-progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#bfa2ea,#ffac91);animation:intro-load 2.45s linear forwards}
+.intro-skip{background:transparent;color:#eee1e5;border:0;font-size:11px;font-weight:800;letter-spacing:2px;padding:13px 0 13px 13px;transition:color .2s}.intro-skip:hover{color:var(--pink-soft)}
+.intro-curtain-left,.intro-curtain-right{position:absolute;top:0;bottom:0;width:50.2%;z-index:5;background:#080910;pointer-events:none;transform:translateX(0);opacity:0}
+.intro-curtain-left{left:0}.intro-curtain-right{right:0}
+.intro-exiting{animation:intro-out .84s ease-in forwards}.intro-exiting .intro-core{animation:intro-title-out .72s ease-in forwards}
+.intro-exiting .intro-curtain-left{opacity:1;animation:curtain-left .82s cubic-bezier(.7,0,.15,1) forwards}.intro-exiting .intro-curtain-right{opacity:1;animation:curtain-right .82s cubic-bezier(.7,0,.15,1) forwards}
+@keyframes intro-breathe{from{opacity:.3;transform:scale(.92)}to{opacity:1;transform:scale(1.2)}}
+@keyframes intro-word-in{from{opacity:0;filter:blur(16px);transform:translateY(38px) scale(1.025)}to{opacity:1;filter:blur(0);transform:translateY(0) scale(1)}}
+@keyframes intro-load{from{width:0}to{width:100%}}
+@keyframes intro-title-out{to{opacity:0;transform:translateY(-35px) scale(1.1);filter:blur(13px)}}
+@keyframes curtain-left{from{transform:translateX(0)}to{transform:translateX(-104%)}}
+@keyframes curtain-right{from{transform:translateX(0)}to{transform:translateX(104%)}}
+@keyframes intro-out{0%,75%{background:#080910}100%{background:transparent;visibility:hidden}}
+
+/* A film-light wipe plays when Next.js navigates between pages. */
+.route-stage{position:relative;animation:page-enter .9s cubic-bezier(.17,.81,.29,1) both;min-height:50vh}
+.route-light-wipe{position:fixed;inset:0;z-index:145;pointer-events:none;opacity:0;background:linear-gradient(104deg,transparent 30%,#ffa3a01a 43%,#fff3ee9b 50%,#b49cf82b 57%,transparent 68%);transform:translateX(-130%);animation:film-wipe .88s cubic-bezier(.3,.02,.28,1) both}
+@keyframes film-wipe{0%{opacity:0;transform:translateX(-130%)}16%{opacity:.82}70%{opacity:.65}100%{transform:translateX(130%);opacity:0}}
+@keyframes page-enter{from{opacity:.68;filter:brightness(.85);transform:translateY(20px)}to{opacity:1;filter:brightness(1);transform:translateY(0)}}
+[data-reveal].will-reveal{opacity:0;transform:translateY(35px);filter:blur(7px);transition:opacity .8s,transform .9s cubic-bezier(.2,.75,.2,1),filter .85s}
+[data-reveal].will-reveal.is-revealed{opacity:1;transform:translateY(0);filter:blur(0)}
+
+/* Navigation: large editorial wordmark, with understated archive insignia. */
+.site-header{z-index:150;background:linear-gradient(180deg,#07090dee,#080910ab);border-color:#ffffff24;backdrop-filter:blur(24px)}
+.nav-wrap{height:98px;gap:48px}
+.logo{gap:13px;min-width:275px}
+.logo-symbol{display:grid;place-items:center;width:38px;height:38px;margin:0;border:1.7px solid var(--pink);border-radius:50%;transform:none;background:transparent;box-shadow:0 0 35px #ea8d9c2b}
+.logo-symbol span{display:block;width:17px;height:17px;border:2px solid var(--pink);border-radius:50%;box-shadow:inset 0 0 9px #d09cb633;position:relative}
+.logo-symbol span::after{content:"";position:absolute;inset:5px;background:var(--pink);border-radius:50%}
+.logo-word{font:800 32px/1 var(--display);letter-spacing:-1.9px}
+.logo-subtitle{max-width:82px;margin-left:5px;padding-left:14px;font-size:9px;letter-spacing:1.4px;color:#bbb1be}
+.main-nav{gap:7px}.main-nav a{font-size:14px;font-weight:800;letter-spacing:.1px;padding:13px 17px}
+.nav-search-trigger{font-size:13px;min-height:43px}.nav-search-trigger kbd{font-size:11px}
+.library-link{height:43px;min-width:43px}.library-count{font-size:10px}
+.mobile-nav-note{font-size:11px}
+.search-modal{max-width:780px;border:1px solid #ffffff31;background:#15121ff5;box-shadow:0 60px 170px #000c}
+.search-modal-heading{font-size:12px}.search-modal-form input{font-size:clamp(21px,2.4vw,30px)}
+
+/* Massive feature image + a framed poster that feels like film art. */
+.spotlight{height:min(950px,100svh);min-height:820px;max-height:none;background:#110d17}
+.spotlight-visual{animation:feature-in 1.35s cubic-bezier(.2,.7,.2,1) both}
+.spotlight-backdrop{filter:contrast(1.1) saturate(.85);opacity:.75;object-position:65% 32%;animation:feature-kenburns 14s ease-in-out both}
+.spotlight-wash{background:linear-gradient(90deg,#080910 2%,#080910f8 24%,#080910db 47%,#08091082 72%,#08091055 100%),linear-gradient(0deg,#080910 0%,transparent 32%,#07091077 92%),linear-gradient(125deg,transparent,#602f503f)}
+.spotlight:after{height:165px;background:linear-gradient(0deg,var(--bg),transparent)}
+.spotlight-inner{padding-top:175px;padding-bottom:110px}
+.spotlight-copy{max-width:min(770px,64vw);animation:hero-copy-reveal .95s cubic-bezier(.21,.79,.18,1) both}
+.spotlight-copy .overline{margin-bottom:34px}
+.hero-caption{font-size:12px;letter-spacing:2.5px}
+.overline-trail{color:#ccc1cd}
+.signal-dot{width:8px;height:8px;flex-shrink:0}
+.spotlight h1{font:800 clamp(72px,7.25vw,139px)/.94 var(--display);letter-spacing:-.076em;max-width:850px;margin-bottom:36px;text-transform:uppercase;text-wrap:balance;text-shadow:0 14px 90px #000e}
+.spotlight-copy h1{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.spotlight-meta{font-size:12px;gap:15px;letter-spacing:.85px;color:#f5eaf1}
+.spotlight-meta>span{padding-right:16px}
+.spotlight-description{font-size:17px;line-height:1.8;color:#e4d8e0;max-width:590px;margin:28px 0 31px;-webkit-line-clamp:3}
+.spotlight-actions{gap:15px}
+.primary-action,.btn-primary{min-height:58px;padding:0 25px;font-size:14px;gap:15px;background:#f7a095;border-color:#f7a095;color:#1c1519;border-radius:7px;box-shadow:0 16px 42px #e67d7d23}
+.primary-action:hover,.btn-primary:hover{background:#ffc0ae;border-color:#ffc0ae;box-shadow:0 20px 55px #f2958e40}
+.watch-button{min-height:58px;padding:0 23px;border-radius:7px;background:#ffffff12;border-color:#ffffff66;font-size:14px}
+.spotlight-art-frame{position:absolute;right:9.3%;top:20.5%;width:min(26vw,390px);height:58%;border:1px solid #ead8dd55;padding:9px;background:#ffffff12;transform:rotate(4deg);box-shadow:0 45px 150px #000c;animation:art-float 9s ease-in-out infinite alternate;overflow:visible}
+.spotlight-art-frame::after{content:"";position:absolute;inset:20px -26px -22px 22px;border:1px solid #f8e4e74d;z-index:-1;pointer-events:none}
+.spotlight-art-frame .spotlight-side-poster{display:block;position:static;right:auto;top:auto;width:100%;height:calc(100% - 30px);opacity:1;transform:none;border:0;border-radius:0;mask-image:none;box-shadow:none;object-fit:cover;filter:saturate(.93)}
+.art-frame-caption{font-size:9px;letter-spacing:1.7px;font-weight:800;padding-top:11px;display:flex;justify-content:space-between;color:#fff4f0}
+.hero-frame-line{position:absolute;left:4%;right:4%;height:1px;background:linear-gradient(90deg,#fff6ea30,transparent 42%,#fff6ea30);z-index:3;pointer-events:none}
+.hero-frame-top{top:117px}.hero-frame-bottom{bottom:45px}
+.spotlight-controls{bottom:85px;gap:35px}.spotlight-index{font-size:26px}.progress-total{font-size:16px}.progress-track{width:150px}
+.spotlight-arrow-controls button,.rail-nav button{width:49px;height:49px;border-radius:8px;border-color:#ffffff5a;background:#fff1f014}
+.hero-scroll{bottom:90px;font-size:12px;letter-spacing:1.7px}
+.spotlight-side-label{font-size:10px;right:17px;letter-spacing:3px}
+.spotlight-empty{background:radial-gradient(ellipse at 72% 40%,#914b7b65,transparent 50%),radial-gradient(ellipse at 45% 80%,#49439170,transparent 48%),#090a12}
+.spotlight-empty-content{position:relative;z-index:5}
+.spotlight-empty-content h1{font-size:clamp(65px,8vw,130px)}
+.spotlight-empty p:not(.overline){font-size:19px;max-width:640px}
+@keyframes feature-in{from{opacity:0;filter:blur(19px);transform:scale(1.05)}to{opacity:1;filter:blur(0);transform:scale(1)}}
+@keyframes feature-kenburns{from{transform:scale(1.06)}to{transform:scale(1.17)}}
+@keyframes hero-copy-reveal{from{opacity:0;filter:blur(14px);transform:translateY(43px)}to{opacity:1;filter:blur(0);transform:translateY(0)}}
+@keyframes art-float{0%{transform:rotate(4deg) translateY(0)}100%{transform:rotate(2deg) translateY(-18px)}}
+
+/* The moving title credits replace decorative asterisk symbols. */
+.manifesto-strip{border-top:1px solid #ffffff26;border-bottom:1px solid #ffffff26;background:#16131d}
+.manifesto-track{min-height:69px;gap:35px;animation-duration:40s;font-size:13px;letter-spacing:2.5px;font-weight:800;color:#f8e5e5}
+.manifesto-track i{width:5px;height:5px;background:var(--pink);display:block;border-radius:50%;flex-shrink:0}
+.welcome-section{padding-top:145px;padding-bottom:105px;align-items:end;gap:50px;border-bottom:1px solid #ffffff1b}
+.welcome-section h2{font:800 clamp(56px,5.6vw,90px)/1.02 var(--display);letter-spacing:-.072em;margin-top:24px}
+.welcome-section h2 em{color:#f2b4a5}
+.welcome-side{max-width:405px}
+.welcome-index{font-size:11px;font-weight:800;letter-spacing:2px;color:var(--pink-soft);display:block;margin-bottom:24px}
+.welcome-section .welcome-side p{font-size:17px;line-height:1.9;margin:0;color:#ddd1db}
+
+/* Ranked anime: numbers live TOP-LEFT, mostly beside artwork, ghosted at 48%. */
+.rail-section{padding-top:115px;padding-bottom:18px}
+.section-heading{margin-bottom:38px}
+.section-overline{font-size:12px;letter-spacing:2px}
+.section-count{font-size:13px}
+.section-heading h2{font:800 clamp(52px,5.2vw,89px)/1 var(--display);letter-spacing:-.069em;text-transform:uppercase;margin:12px 0 14px}
+.section-heading p{font-size:17px;line-height:1.75;color:#bfb4c1;max-width:670px}
+.section-size{font-size:11px;letter-spacing:1.5px;color:#bbb3bd}
+.anime-rail{gap:22px;padding-top:29px;padding-bottom:28px;scroll-padding-left:2px}
+.anime-card{flex-basis:243px;transition:transform .4s cubic-bezier(.2,.83,.2,1)}
+.anime-card:hover{transform:translateY(-9px)}
+.anime-poster-area{height:350px}
+.anime-cover{border-radius:5px;background:#15131b;border:1px solid #ffffff2a;box-shadow:0 24px 60px #0004}
+.anime-cover>img{transition:transform 1s cubic-bezier(.2,.7,.2,1),filter .55s}
+.anime-card:hover .anime-cover>img{transform:scale(1.09)}
+.card-open{width:43px;height:43px;border-radius:5px}
+.card-score{font-size:12px;font-weight:800;border-radius:4px;padding:7px 9px}
+.card-copy{padding-top:18px}.card-copy h3{font-size:20px;line-height:1.32;letter-spacing:-.6px}
+.card-eyebrow{font-size:11px;letter-spacing:1.4px}
+.card-copy p{font-size:11px;letter-spacing:1px}
+.ranked-rail{gap:23px}
+.ranked-rail .anime-card{flex-basis:298px}
+.ranked-rail .anime-poster-area{height:365px;padding-left:47px;overflow:visible}
+.ranked-rail .anime-cover{z-index:2}
+.ranked-rail .card-copy{padding-left:47px}
+.ranking-digit{position:absolute;z-index:4;top:-24px;bottom:auto;left:0;font:400 102px/.9 var(--number);letter-spacing:-5px;color:rgba(255,248,240,.47);opacity:.92;-webkit-text-stroke:.7px rgba(255,248,240,.45);text-shadow:0 6px 28px #0009;pointer-events:none;transition:color .3s,transform .3s}
+.anime-card:hover .ranking-digit{color:rgba(255,230,209,.69);-webkit-text-stroke-color:#ffede0;transform:translateY(-4px)}
+.ranked-rail .card-score{left:12px}
+.feed-error{border-radius:5px;padding:35px;font-size:16px}.feed-error strong{font-size:19px}.feed-error p{font-size:14px}
+
+/* Editorial: a cinematic intermission between chart reels. */
+.editorial-panel{margin-top:124px;min-height:570px;border:1px solid #ffffff2b;background:linear-gradient(110deg,#17121c,#1c172b 65%,#22202d);border-radius:4px;overflow:hidden}
+.editorial-copy{padding:90px 32px 80px 78px}
+.editorial-copy .overline{font-size:12px}
+.editorial-copy h2{font:800 clamp(49px,5.5vw,88px)/1.02 var(--display);letter-spacing:-.07em;margin:24px 0}
+.editorial-copy p{font-size:18px;line-height:1.75;max-width:460px;color:#ddd2df;margin-bottom:28px}
+.editorial-copy h2 em{color:#f4a7a2}
+.editorial-micro{display:block;font-size:10px;letter-spacing:1.8px;font-weight:800;color:#a7a0b2;margin-top:44px}
+.editorial-art{position:relative}
+.editorial-disc{position:absolute;left:1%;top:9%;width:450px;height:450px;border:1px solid #ffffff1d;border-radius:50%;box-shadow:0 0 0 38px #ffffff07,0 0 0 80px #ffffff04;transform:rotate(-20deg)}
+.editorial-disc div{width:120px;height:120px;border-radius:50%;border:1px solid #ffffff36;position:absolute;inset:0;margin:auto}
+.editorial-art-card{border-radius:2px;border:6px solid #eae1e015;box-shadow:0 25px 70px #000a}
+.editorial-art-label{font-size:10px;letter-spacing:1.8px}
+
+/* Browse/collect entry cards. */
+.quick-links{padding-top:135px;gap:22px}
+.quick-links-heading h2{font:800 clamp(40px,4.2vw,65px)/1.04 var(--display);letter-spacing:-.065em}
+.quick-links-heading h2 em{color:var(--pink-soft)}
+.quick-links-heading p{font-size:16px;line-height:1.7;color:#bdb5c4;max-width:370px}
+.quick-link-card{min-height:360px;padding:35px;border-radius:4px;border:1px solid #ffffff22;transition:transform .4s,border-color .3s,box-shadow .4s}
+.quick-link-card:hover{transform:translateY(-10px);border-color:#ffffff66;box-shadow:0 30px 90px #0006}
+.quick-link-card strong{font:800 clamp(25px,2.8vw,40px)/1.12 var(--display);letter-spacing:-1.5px}
+.quick-link-label{font-size:12px;letter-spacing:2px}.quick-link-icon{width:58px;height:58px;border-radius:9px}
+.closing-section{min-height:575px;margin-top:135px;margin-bottom:100px;border:1px solid #ffffff2b;border-radius:4px;background:radial-gradient(ellipse at 50% 10%,#a1637768,transparent 55%),linear-gradient(135deg,#1a1624,#10131c)}
+.closing-section h2{font:800 clamp(61px,7vw,113px)/.96 var(--display);letter-spacing:-.075em}
+.closing-section h2 em{color:#fbb8ab}
+.closing-section p{font-size:18px;line-height:1.75;max-width:580px}
+.closing-iris{display:grid;place-items:center;margin:0 auto 30px;width:55px;height:55px;border:1px solid #ffc6bc77;border-radius:50%;color:#ffbcb1}
+.closing-bottom{font-size:11px;letter-spacing:1.4px}
+
+/* More legible typography and touch targets throughout internal pages. */
+.sub-page{padding-top:193px;padding-bottom:105px}
+.page-intro h1,.missing-page h1{font:800 clamp(68px,8.6vw,135px)/.99 var(--display);letter-spacing:-.078em;margin:22px 0}
+.page-intro p{font-size:18px;line-height:1.7;color:#c7bfcf;max-width:780px}
+.explore-search{max-width:960px;margin-top:45px;border-radius:7px;min-height:86px;padding:13px 14px 13px 27px}
+.explore-search input{font-size:22px}.explore-search button{font-size:14px;border-radius:5px;min-height:56px;padding:0 24px}
+.search-results{margin-top:70px}.search-summary h2{font-size:36px}.search-summary>span{font-size:12px}
+.anime-grid{gap:45px 24px}
+.search-placeholder{font-size:15px;padding:75px 15px}
+.search-placeholder p{font-size:16px}
+.empty-state{border-radius:6px}.empty-state h3{font-size:31px}.empty-state p{font-size:16px;line-height:1.65}
+.empty-symbol,.feed-error-icon{display:grid;place-items:center}
+.detail-hero{padding-top:192px;padding-bottom:100px}.detail-body{gap:68px}.detail-copy h1{font:800 clamp(57px,6.6vw,102px)/1.02 var(--display);letter-spacing:-.066em}
+.detail-synopsis{font-size:18px;line-height:1.85}.original-title{font-size:16px}.detail-tags>span{font-size:12px;padding:11px 14px}
+.detail-facts>div{padding:31px}.detail-facts span{font-size:12px}.detail-facts strong{font-size:22px}.detail-bottom h2{font-size:clamp(50px,7vw,99px)}
+.library-stats>div{min-height:160px;padding:30px}.library-stats>div strong{font-size:68px}.library-stats>div span{font-size:12px}
+.library-stats-deco{font:700 48px/1 var(--display);color:#ffffff15;display:grid;place-items:center}
+.filter-tabs button{font-size:13px;min-height:43px}
+.library-item{border-radius:7px;padding:21px}.library-item-copy h3{font-size:24px}.library-item-copy p{font-size:14px}
+.status-select-wrap>span,.progress-wrap>span{font-size:11px;letter-spacing:1.2px}
+.status-select-wrap select{font-size:13px;background-color:#292334;color:#fff;border-color:#ffffff2e}
+.status-select-wrap select option{background:#292334;color:#fff}
+.progress-wrap strong{font-size:15px}.storage-note{font-size:13px;line-height:1.7;color:#aaa2b3}
+
+/* Editorial footer */
+.site-footer{background:#11121b;border-top:1px solid #ffffff20}
+.footer-inner{padding-top:100px;padding-bottom:100px}
+.footer-logo{font:800 clamp(49px,5.3vw,82px)/1 var(--display);letter-spacing:-.075em}
+.footer-brand p{font-size:15px;line-height:1.8}.footer-orbit{font-size:11px;letter-spacing:1.4px}
+.footer-links>span,.footer-credit>span{font-size:12px}.footer-links a{font-size:16px}
+.footer-credit p{font-size:14px;line-height:1.9}.footer-credit small{font-size:11px;line-height:1.8}
+.footer-base{font-size:11px;line-height:1.7}
+
+@media(max-width:1240px){
+  .site-container,.shell{width:min(calc(100% - 76px),1540px)}
+  .nav-wrap{gap:21px}.logo{min-width:210px}.logo-word{font-size:28px}.logo-subtitle{display:none}
+  .main-nav a{padding-inline:12px;font-size:13px}
+  .spotlight-art-frame{right:4%;width:29vw;top:26%;height:50%;opacity:.85}
+  .spotlight-copy{max-width:690px}
+  .editorial-copy{padding-left:54px}
+  .ranked-rail .anime-card{flex-basis:270px}
+}
+@media(max-width:980px){
+  .site-container,.shell{width:calc(100% - 58px)}
+  .nav-wrap{height:80px}.site-header{min-height:80px}.main-nav{top:80px;background:#11111eea}.main-nav a{font-size:17px}
+  .spotlight{height:830px;min-height:770px}
+  .spotlight-inner{padding-top:155px}
+  .spotlight-copy{max-width:78%}
+  .spotlight h1{font-size:clamp(61px,8vw,89px)}
+  .spotlight-art-frame{right:-9%;top:27%;height:51%;width:43vw;opacity:.57}
+  .spotlight-wash{background:linear-gradient(90deg,#080910 2%,#080910ed 42%,#08091074 100%),linear-gradient(0deg,#080910 0%,transparent 30%)}
+  .welcome-section{align-items:start;padding-top:110px;padding-bottom:90px;gap:24px}.welcome-section h2{font-size:clamp(46px,6vw,70px)}
+  .welcome-side{max-width:330px}.welcome-section .welcome-side p{font-size:15px}
+  .quick-links-heading h2{font-size:55px}.quick-link-card{min-height:305px}
+  .editorial-copy h2{font-size:clamp(45px,6vw,62px)}
+  .anime-grid{gap:35px 17px}
+}
+@media(max-width:700px){
+  .site-container,.shell{width:calc(100% - 38px)}
+  .nav-wrap{height:73px}.site-header{min-height:73px}.main-nav{top:73px}
+  .logo{gap:9px}.logo-symbol{width:29px;height:29px}.logo-symbol span{width:14px;height:14px}.logo-symbol span::after{inset:4px}.logo-word{font-size:27px;letter-spacing:-1.6px}
+  .nav-search-trigger,.library-link,.mobile-menu{min-height:40px;min-width:40px;height:40px;width:40px}
+  .intro-topline,.intro-bottomline{left:20px;right:20px;font-size:9px;letter-spacing:.8px}.intro-topline{top:26px}.intro-bottomline{bottom:24px;gap:12px;flex-wrap:wrap}.intro-bottomline>span{width:100%}.intro-progress{flex:1;min-width:105px}.intro-skip{font-size:10px;padding:6px}
+  .intro-eyebrow{font-size:10px}.intro-wordmark{font-size:clamp(61px,14.2vw,104px);letter-spacing:-.08em}
+  .spotlight{height:780px;min-height:700px;max-height:none}
+  .spotlight-inner{padding-top:149px;padding-bottom:100px;justify-content:center}
+  .spotlight-copy{max-width:100%;position:relative;z-index:3}
+  .spotlight-copy .overline{margin-bottom:25px;font-size:10px;letter-spacing:1.7px}
+  .overline-trail{display:none}
+  .spotlight h1{font-size:clamp(49px,10.5vw,75px);max-width:100%;margin-bottom:23px;line-height:.97}
+  .spotlight-meta{font-size:10px;gap:6px}.spotlight-meta>span{padding-right:8px}
+  .spotlight-description{font-size:14px;line-height:1.7;max-width:460px;-webkit-line-clamp:4;margin:20px 0 23px}
+  .spotlight-art-frame{right:-20%;top:22%;height:51%;width:70%;opacity:.3;transform:rotate(2deg);animation:none}
+  .spotlight-backdrop{opacity:.4;object-position:70% 50%}
+  .spotlight-wash{background:linear-gradient(90deg,#080910ea 5%,#0809109b 100%),linear-gradient(0deg,#080910 0%,transparent 40%)}
+  .spotlight-actions{gap:10px}.primary-action,.btn-primary,.watch-button{min-height:51px;font-size:12px;padding:0 17px;gap:9px}
+  .spotlight-controls{bottom:60px;right:0;gap:15px}.spotlight-progress{gap:8px}.spotlight-index{font-size:19px}.progress-total{font-size:13px}.progress-track{width:74px}.spotlight-arrow-controls button{width:40px;height:40px}
+  .hero-scroll{bottom:67px;font-size:9px;letter-spacing:1px;gap:5px}.hero-frame-top{top:92px}.hero-frame-bottom{bottom:31px}.spotlight-side-label{display:none}
+  .manifesto-track{min-height:53px;gap:23px;font-size:10px;letter-spacing:1.4px}
+  .welcome-section{padding-top:87px;padding-bottom:80px;display:block}.welcome-section h2{font-size:clamp(43px,8.3vw,59px);margin-top:16px}.welcome-side{max-width:100%;margin-top:26px}.welcome-index{margin-bottom:12px}.welcome-section .welcome-side p{font-size:15px}
+  .overline,.section-kicker{font-size:10px;letter-spacing:1.5px}
+  .rail-section{padding-top:86px}.section-heading{gap:12px;align-items:end;margin-bottom:20px}.section-heading h2{font-size:clamp(42px,7.8vw,60px);margin:12px 0}.section-heading p{font-size:14px;line-height:1.6}.section-size{display:none}.section-overline{font-size:10px}
+  .rail-nav{gap:6px}.rail-nav button{width:38px;height:38px}
+  .anime-card{flex-basis:177px}.anime-poster-area{height:260px}.card-copy h3{font-size:17px}.card-eyebrow{font-size:10px}
+  .ranked-rail .anime-card{flex-basis:222px}.ranked-rail .anime-poster-area{height:280px;padding-left:30px}.ranked-rail .card-copy{padding-left:30px}.ranking-digit{font-size:80px;top:-18px;left:0;letter-spacing:-4px}
+  .editorial-panel{margin-top:95px;min-height:650px;grid-template-columns:1fr}.editorial-copy{padding:54px 28px 0}.editorial-copy h2{font-size:clamp(49px,9vw,70px)}.editorial-copy p{font-size:15px}.editorial-micro{margin-top:25px;font-size:9px}.editorial-art{min-height:280px}.editorial-disc{width:250px;height:250px;left:20%;top:0}.editorial-art-card{width:128px;height:195px}.editorial-art-1{left:19%;top:20%}.editorial-art-2{left:41%;top:6%}.editorial-art-3{left:61%;top:29%}.editorial-art-label{font-size:8px}
+  .quick-links{padding-top:95px;gap:13px}.quick-links-heading h2{font-size:clamp(42px,7vw,57px)}.quick-links-heading p{font-size:15px}.quick-link-card{min-height:225px;padding:21px}.quick-link-card strong{font-size:21px}.quick-link-icon{width:44px;height:44px}
+  .closing-section{margin-top:95px;margin-bottom:75px;padding:72px 18px 80px;min-height:510px}.closing-section h2{font-size:clamp(49px,9vw,74px)}.closing-section p{font-size:15px}.closing-bottom{font-size:8px}
+  .sub-page{padding-top:145px;padding-bottom:85px}.page-intro h1,.missing-page h1{font-size:clamp(56px,11vw,82px)}.page-intro p{font-size:15px}
+  .explore-search{margin-top:30px;min-height:63px;padding:8px 9px 8px 15px}.explore-search input{font-size:15px}.explore-search button{font-size:11px;min-height:44px;padding:0 12px}
+  .anime-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px 12px}.anime-grid .anime-poster-area{height:auto;aspect-ratio:2/3}.anime-grid .anime-card{flex:auto}.anime-grid .card-copy h3{font-size:15px}
+  .detail-hero{padding-top:145px;padding-bottom:75px}.detail-copy h1{font-size:clamp(47px,8vw,73px)}.detail-synopsis{font-size:15px}.detail-body{gap:29px}.detail-facts>div{padding:19px}.detail-facts strong{font-size:17px}
+  .library-stats>div{min-height:112px;padding:15px}.library-stats>div strong{font-size:45px}.library-stats>div span{font-size:10px}
+  .library-item-copy h3{font-size:18px}.library-item{padding:13px}.storage-note{font-size:12px}
+  .footer-inner{padding-top:65px;padding-bottom:57px}.footer-logo{font-size:56px}.footer-brand p{font-size:14px}.footer-links a{font-size:14px}.footer-credit p{font-size:12px}.footer-base{font-size:9px}
+}
+@media(max-width:420px){
+  .logo-word{font-size:24px}.logo-symbol{width:26px;height:26px}.nav-actions{gap:5px}
+  .spotlight{height:750px;min-height:690px}.spotlight h1{font-size:clamp(45px,10.2vw,55px)}.spotlight-description{font-size:13px}.spotlight-actions{gap:8px}
+  .spotlight-actions .primary-action,.spotlight-actions .watch-button{font-size:11px;padding:0 11px;min-height:46px}.spotlight-controls{bottom:45px}.hero-scroll{bottom:56px}
+  .section-heading h2{font-size:38px}.section-heading p{font-size:13px}
+  .ranked-rail .anime-card{flex-basis:203px}.ranked-rail .anime-poster-area{height:260px;padding-left:26px}.ranked-rail .card-copy{padding-left:26px}.ranking-digit{font-size:73px;top:-15px}
+  .anime-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .quick-links{grid-template-columns:1fr}.quick-link-card{min-height:177px}.quick-link-card strong{font-size:25px}
+  .closing-section h2{font-size:45px}
+  .intro-wordmark{font-size:clamp(55px,14.2vw,65px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .cinematic-intro{display:none!important}
+  .ambient-particles{display:none}
+  .ambient-particle,.spotlight-art-frame,.spotlight-backdrop,.route-stage,.route-light-wipe,[data-reveal],.intro-wordmark,.intro-core,.intro-glow{animation:none!important;transition:none!important;transform:none!important;filter:none!important}
+  [data-reveal].will-reveal{opacity:1!important}
+}
+/* The intro is one-per-session by default. This footer control makes it replayable. */
+.replay-intro{display:inline-flex;align-items:center;gap:8px;border:1px solid #ffffff30;border-radius:4px;background:#ffffff09;color:#decfd8;padding:11px 14px;font:800 10px/1 var(--body);letter-spacing:1.5px;transition:color .2s,border-color .2s,transform .2s}
+.replay-intro:hover{color:var(--pink-soft);border-color:#ffc0ad93;transform:translateY(-2px)}
+.loading-screen{min-height:85vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;gap:16px;padding:150px 20px 100px;background:radial-gradient(ellipse at center,#5f385c33,transparent 60%),#090a12}
+.loading-ring{width:45px;height:45px;border-radius:50%;border:2px solid var(--pink);display:grid;place-items:center;animation:loading-breathe 2s ease-in-out infinite}
+.loading-ring span{width:15px;height:15px;border-radius:50%;border:2px solid #f4a7a2}
+.loading-screen>span{color:var(--pink-soft);font-size:11px;font-weight:800;letter-spacing:3px}
+.loading-screen h2{font:800 clamp(60px,11vw,135px)/1 var(--display);letter-spacing:-.075em;margin:0}
+.loading-screen p{font-size:12px;font-weight:800;letter-spacing:2px;color:#c9b5ca}
+.loading-beam{width:min(350px,68vw);height:2px;background:#ffffff20;overflow:hidden}.loading-beam span{display:block;width:40%;height:100%;background:linear-gradient(90deg,#b5a0fc,#f7a095);animation:loading-slide 1.3s infinite ease-in-out}
+@keyframes loading-breathe{50%{box-shadow:0 0 35px #ffb2a276;transform:scale(1.07)}}
+@keyframes loading-slide{0%{transform:translateX(-100%)}100%{transform:translateX(300%)}}
+@media(max-width:700px){.footer-base{flex-wrap:wrap}.replay-intro{order:3;width:100%;justify-content:center;margin-top:10px}}
+@media(prefers-reduced-motion:reduce){.loading-ring,.loading-beam span{animation:none}}
+
+/* CSS-only fail-safe: never leave the site blocked if JavaScript fails. */
+@keyframes intro-fallback { 0%,99%{visibility:visible} 100%{visibility:hidden} }
+
+
+/* KIROKU 3.1 — Final UI polish: clearer type hierarchy, expansive search, collision-free hero footer. */
+@media (min-width: 981px) {
+  .nav-wrap { gap: clamp(16px, 2.2vw, 37px); }
+  .logo { min-width: 0; flex-shrink: 0; }
+  .main-nav { margin-left: auto; gap: 2px; }
+  .main-nav a { padding-inline: clamp(9px, 1vw, 16px); font-size: 13px; }
+  .nav-actions { margin-left: 0; flex-shrink: 0; gap: 12px; }
+  .nav-search-trigger {
+    display: inline-flex; width: clamp(198px, 19vw, 295px); min-width: 0;
+    height: 51px; justify-content: flex-start; padding-inline: 17px;
+    border-radius: 11px; gap: 13px; background: #ffffff0d;
+    border-color: #ffffff38; box-shadow: inset 0 0 0 1px #ffffff08;
+  }
+  .nav-search-trigger span { display: inline; font-size: 13px; }
+  .nav-search-trigger kbd { display: grid; }
+  .nav-search-trigger:hover { border-color: #f9bba077; background: #ffffff17; }
+}
+@media (min-width: 981px) and (max-width: 1120px) {
+  .nav-wrap { gap: 15px; }
+  .logo-word { font-size: 27px; }
+  .main-nav a { padding-inline: 9px; font-size: 12px; }
+  .nav-search-trigger { width: 172px; padding-inline: 12px; }
+  .nav-search-trigger kbd { display: none; }
+}
+.search-overlay { padding: clamp(90px, 13vh, 154px) 20px 30px; overflow-y: auto; }
+.search-modal {
+  width: min(1010px, 100%); max-width: none; border-radius: 14px;
+  background: linear-gradient(135deg, #1d1828f8, #111019f8 65%);
+}
+.search-modal-heading { padding: 26px clamp(20px, 3.5vw, 45px) 18px; }
+.search-modal-form {
+  min-height: 112px; padding: 20px clamp(20px, 3.5vw, 45px) 30px;
+  gap: 20px;
+}
+.search-modal-form input { font: 600 clamp(20px, 2.35vw, 28px)/1.2 var(--display); }
+.search-modal-form button { width: 56px; height: 56px; border-radius: 10px; }
+.search-modal-tip { padding: 16px clamp(20px, 3.5vw, 45px); }
+.explore-search { width: 100%; max-width: 1120px; min-height: 78px; }
+.explore-search input { font-size: 19px; }
+
+/* Scale just the oversized editorial text down; retain intentionally bold KIROKU branding. */
+.spotlight h1 { font-size: clamp(62px, 6.55vw, 119px); line-height: .97; letter-spacing: -.066em; }
+.spotlight-description { font-size: 16px; line-height: 1.7; }
+.welcome-section h2 { font-size: clamp(50px, 5vw, 78px); }
+.welcome-section .welcome-side p { font-size: 16px; }
+.section-heading h2 { font-size: clamp(45px, 4.65vw, 77px); }
+.section-heading p { font-size: 16px; }
+.card-copy h3 { font-size: 18px; }
+.editorial-copy h2 { font-size: clamp(43px, 4.8vw, 76px); }
+.editorial-copy p { font-size: 16px; }
+.quick-links-heading h2 { font-size: clamp(37px, 3.9vw, 59px); }
+.closing-section h2 { font-size: clamp(53px, 6.2vw, 96px); }
+.closing-section p { font-size: 16px; }
+.page-intro h1,.missing-page h1 { font-size: clamp(58px, 7.7vw, 113px); }
+.page-intro p { font-size: 16px; }
+.detail-copy h1 { font-size: clamp(52px, 6vw, 89px); }
+.detail-synopsis { font-size: 16px; }
+
+/* The scroll affordance and carousel controls now share a real flex layout.
+   Independent absolute offsets previously caused visual collisions. */
+.spotlight { height: auto; min-height: max(860px, 100svh); }
+.spotlight-inner { height: auto; min-height: inherit; padding-top: 168px; padding-bottom: 170px; }
+.spotlight-bottom-bar {
+  position: absolute; left: 0; right: 0; bottom: 70px;
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 25px; z-index: 6; min-height: 49px;
+}
+.spotlight-bottom-bar .hero-scroll,
+.spotlight-bottom-bar .spotlight-controls {
+  position: static; left: auto; right: auto; top: auto; bottom: auto;
+  max-width: none; flex-shrink: 0;
+}
+.spotlight-bottom-bar .hero-scroll { white-space: nowrap; line-height: 1.35; }
+.spotlight-bottom-bar .spotlight-controls { margin-left: auto; }
+.spotlight-bottom-bar .spotlight-progress { flex-shrink: 0; }
+
+@media (max-width: 980px) {
+  .search-modal { width: min(840px, 100%); }
+  .spotlight h1 { font-size: clamp(52px, 7vw, 73px); }
+  .welcome-section h2 { font-size: clamp(45px, 6vw, 64px); }
+  .section-heading h2 { font-size: clamp(41px, 5.3vw, 61px); }
+  .editorial-copy h2 { font-size: clamp(43px, 5.4vw, 58px); }
+  .detail-copy h1 { font-size: clamp(46px, 6vw, 72px); }
+  .spotlight-inner { padding-bottom: 148px; }
+  .spotlight-bottom-bar { bottom: 55px; }
+  .spotlight-bottom-bar .spotlight-controls { gap: 17px; }
+}
+@media (max-width: 700px) {
+  .search-overlay { padding: 88px 12px 22px; }
+  .search-modal { border-radius: 11px; }
+  .search-modal-heading { padding: 18px 16px 8px; font-size: 9px; letter-spacing: 1px; }
+  .search-modal-form { min-height: 90px; gap: 10px; padding: 14px 16px 24px; }
+  .search-modal-form input { font-size: clamp(16px, 4.2vw, 21px); }
+  .search-modal-form>svg { width: 21px; }
+  .search-modal-form button { width: 44px; height: 44px; }
+  .search-modal-tip { padding: 13px 16px; font-size: 8px; letter-spacing: .5px; }
+  .spotlight { height: auto; min-height: max(820px, 100svh); }
+  .spotlight-inner {
+    height: auto; min-height: max(820px, 100svh);
+    padding-top: 135px; padding-bottom: 178px;
+    justify-content: center;
+  }
+  .spotlight-copy { max-width: 100%; }
+  .spotlight h1 { font-size: clamp(44px, 9vw, 64px); }
+  .spotlight-description { font-size: 13px; line-height: 1.65; }
+  .spotlight-bottom-bar {
+    bottom: 45px; flex-direction: column-reverse; align-items: stretch;
+    justify-content: flex-start; gap: 17px;
+  }
+  .spotlight-bottom-bar .spotlight-controls {
+    width: 100%; margin-left: 0; justify-content: space-between;
+    gap: 10px;
+  }
+  .spotlight-bottom-bar .hero-scroll {
+    align-self: flex-start; font-size: 10px; letter-spacing: 1.15px;
+  }
+  .spotlight-bottom-bar .progress-track { width: clamp(45px, 13vw, 80px); }
+  .spotlight-bottom-bar .spotlight-index { font-size: 20px; }
+  .welcome-section h2 { font-size: clamp(36px, 7.4vw, 49px); }
+  .section-heading h2 { font-size: clamp(32px, 6.35vw, 43px); }
+  .editorial-copy h2 { font-size: clamp(32px, 6.6vw, 46px); }
+  .quick-links-heading h2 { font-size: clamp(31px, 6.5vw, 45px); }
+  .closing-section h2 { font-size: clamp(34px, 7.2vw, 50px); }
+  .page-intro h1,.missing-page h1 { font-size: clamp(48px, 10.1vw, 70px); }
+  .detail-copy h1 { font-size: clamp(42px, 8vw, 64px); }
+  .explore-search { min-height: 63px; }
+  .explore-search input { font-size: 15px; }
+  .card-copy h3 { font-size: 16px; }
+}
+@media (max-width: 420px) {
+  .spotlight h1 { font-size: clamp(40px, 10vw, 49px); }
+  .spotlight-inner { padding-top: 132px; padding-bottom: 188px; }
+  .spotlight-bottom-bar { bottom: 42px; }
+  .spotlight-description { margin-top: 18px; }
+  .search-modal-tip span:first-child { max-width: 50%; line-height: 1.35; }
+}
+
+
+/* V3.2 — Keep the entire featured-anime title visible without clipping.
+   Only spotlight anime titles are affected; all other typography stays intact. */
+.spotlight-copy h1 {
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+  font-size: clamp(42px, 5vw, 80px);
+  line-height: 1.065;
+  letter-spacing: -.052em;
+  max-width: 100%;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+.spotlight-copy h1.spotlight-title-long {
+  font-size: clamp(35px, 4.1vw, 66px);
+  line-height: 1.09;
+}
+.spotlight-copy h1.spotlight-title-very-long {
+  font-size: clamp(28px, 3.35vw, 53px);
+  line-height: 1.13;
+  letter-spacing: -.04em;
+}
+@media (max-width: 700px) {
+  .spotlight-copy h1 { font-size: clamp(35px, 7.7vw, 51px); }
+  .spotlight-copy h1.spotlight-title-long { font-size: clamp(30px, 6.8vw, 43px); }
+  .spotlight-copy h1.spotlight-title-very-long { font-size: clamp(25px, 5.7vw, 35px); }
+}
+@media (max-width: 420px) {
+  .spotlight-copy h1 { font-size: clamp(33px, 8.3vw, 39px); }
+  .spotlight-copy h1.spotlight-title-long { font-size: clamp(28px, 7.2vw, 34px); }
+  .spotlight-copy h1.spotlight-title-very-long { font-size: clamp(23px, 5.9vw, 29px); }
+}
