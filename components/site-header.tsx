@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ArrowUpRight, CircleDot, LibraryBig, Menu, Search, X } from "lucide-react";
+import { ArrowUpRight, CircleDot, LibraryBig, Menu, Search, UserRound, X } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
 import { useLibrary } from "./library-provider";
+import { useAuth } from "./auth-provider";
 
 export function SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
   const { entries } = useLibrary();
+  const { user } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -47,11 +49,13 @@ export function SiteHeader() {
           <Link href="/#charts" onClick={() => setMenuOpen(false)}>Top 10</Link>
           <Link href="/search" onClick={() => setMenuOpen(false)} className={pathname === "/search" ? "active" : ""}>Explore</Link>
           <Link href="/library" onClick={() => setMenuOpen(false)} className={pathname === "/library" ? "active" : ""}>My library</Link>
+          <Link href={user ? "/account" : "/auth"} onClick={() => setMenuOpen(false)} className={`auth-mobile-link ${pathname === "/account" || pathname === "/auth" ? "active" : ""}`}>{user ? "Account" : "Sign in"}</Link>
           <div className="mobile-nav-note"><CircleDot size={14}/> THE ART OF REMEMBERING</div>
         </nav>
         <div className="nav-actions">
           <button type="button" className="nav-search-trigger" onClick={() => setSearchOpen(true)} aria-label="Open anime search"><Search size={20}/><span>Search anime</span><kbd>/</kbd></button>
           <Link href="/library" className="library-link" aria-label={`My library with ${entries.length} anime`}><LibraryBig size={20}/><span className="library-count">{entries.length}</span></Link>
+          <Link className="nav-account-icon" href={user ? "/account" : "/auth"} aria-label={user ? "My account" : "Sign in"} title={user ? "My account" : "Sign in"}><UserRound size={19}/></Link>
           <button type="button" className="icon-button mobile-menu" aria-expanded={menuOpen} aria-label={menuOpen ? "Close menu" : "Open menu"} onClick={() => setMenuOpen(v => !v)}>{menuOpen ? <X size={24}/> : <Menu size={24}/>}</button>
         </div>
       </div>

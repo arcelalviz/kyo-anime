@@ -1,6 +1,6 @@
 {
   "name": "kiroku-anime-universe",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -12,7 +12,9 @@
     "next": "^16.3.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "lucide-react": "^0.468.0"
+    "lucide-react": "^0.468.0",
+    "@supabase/supabase-js": "^2.57.0",
+    "@supabase/ssr": "^0.6.1"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
@@ -20,5 +22,7 @@
     "@types/react-dom": "^19.0.0",
     "typescript": "^5.7.0"
   },
-  "engines": { "node": ">=20.9" }
+  "engines": {
+    "node": ">=20.9"
+  }
 }
